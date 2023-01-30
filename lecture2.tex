@@ -1,0 +1,333 @@
+\documentclass{beamer}
+\usetheme{chlenski}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{outlines}
+
+\title{Intro to Microbial Genomics}
+\subtitle{BIOL BC3308, Lecture 2}
+\author{Philippe Chlenski}
+\date{January 24, 2023}
+
+\renewcommand{\c}[1]{\begin{center}#1\end{center}}
+\newcommand{\blu}[1]{\textcolor{blue}{\textbf{#1}}}
+\newcommand{\red}[1]{\textcolor{red}{\textbf{#1}}}
+\newcommand{\yel}[1]{\textcolor{yellow}{\textbf{#1}}}
+\newcommand{\gr}[2][.95]{\c{\includegraphics[width=#1\textwidth]{#2}}}
+
+% \setbeameroption{show notes}
+
+\begin{document}
+
+\begin{frame}[plain]
+\titlepage
+\end{frame}
+
+\begin{frame}{Outline}
+\tableofcontents
+\end{frame}
+
+\section{Guiding questions}
+
+\begin{frame}{Types of bioinformatic data}
+Bioinformatics: connecting diverse data types to infer biological meaning
+\begin{columns}
+\begin{column}{0.5\textwidth}
+    \gr{l2_figs/s3_evolve.png}
+\end{column}
+\begin{column}{0.5\textwidth}
+    \tiny
+    \begin{outline}
+        \1 Raw DNA sequences
+        \1 Assembled DNA sequences
+        \1 Gene sequences
+        \1 Gene functions
+        \1 Expression levels
+        \1 Raw RNA sequences
+        \1 Transcript functions
+        \1 Expression levels
+        \1 Protein sequences
+        \1 Protein structures
+        \1 Protein functions
+        \1 Cellular systems (pathways)
+        \1 Metabolites
+        \1 Etc\ldots
+    \end{outline}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Why do we need bioinformatics?}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+    Necessitated by the rapidly expanding quantities and complexity of biomolecular data.\\
+    \bigskip
+    Provides methods to efficiently\ldots
+    \begin{outline}
+        \1 Store
+        \1 Annotate
+        \1 Search and retrieve
+        \1 Integrate
+        \1 Mine and analyze
+    \end{outline}
+    \ldots biological data
+\end{column}
+\begin{column}{0.5\textwidth}
+    \gr{l2_figs/s3_number_genomes.png}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{How do we actually do bioinformatics?}
+Pre-packaged tools and databases
+\begin{outline}
+    \1[] Many available online
+    \1[] New tools and time consuming methods frequently require downloading
+    \1[] Most are free to use
+\end{outline}
+
+Tool development
+\begin{outline}
+    \1[] Mostly on UNIX environment
+    \1[] Knowledge of programming languages, frequently require R, python, or MATLAB
+    \1[] May require specialized or high performance computing (HPC) resources
+\end{outline}
+
+\end{frame}
+
+\begin{frame}{Interpreting bioinformatic results}
+\red{Just as important} as wet lab data, and should be treated with equal skepticism
+\begin{outline}
+    \1[] Do they make sense?
+    \1[] Is it what we expect?
+    \1[] Do we have adequate controls, and how did they look?
+    \1[] Avoid misuse of “black box”
+\end{outline}
+\end{frame}
+
+\begin{frame}{Common problems and issues}
+    \blu{Overwhelming}: There are \red{so many tools available}. Which one should we use, and what are the appropriate parameters to use for my question?\\
+    \bigskip
+    \blu{Unintuitive}: most tools and databases are written by and for people with varying degrees of biological training.\\
+    \bigskip
+    \blu{Incompatibility}: most tools are developed independently and don’t play well together.
+\end{frame}
+
+\begin{frame}{}
+\c{
+    \huge \blu{Databases come in all different shapes and sizes\ldots and quality!!!\\
+    \bigskip
+    \large (See database handout)}
+}
+\end{frame}
+
+\begin{frame}{Primary, secondary, and composite databases}
+Can classify bioinformatics databases by their data source:\\
+\begin{outline}
+\1[] \blu{Primary databases} (or archival databases) consist of data derived experimentally:
+    \2[] \red{GenBank}: NCBI’s primary nucleotide sequence database
+    \2[] \red{PDB}: Protein X-ray crystal and nMR structure
+\1[] \blu{Secondary databases} (or derived databases) contain information derived from primary databases:
+    \2[] \red{RefSeq}: Non redundant set of curated reference sequences primarily from GenBank
+    \2[] \red{PFAM}: Protein sequence families primarily from UniProt and PDB
+\1[] \blu{Composite databases} (or metadatabases) join a variety of different primary and secondary database sources:
+    \2[] \red{OMIM}: Catalog of human genes, genetic disorders, and related literature
+    \2[] \red{Gene}: Molecular data and literature related to genes with extensive links to other databases
+\end{outline}
+\end{frame}
+
+\begin{frame}{Key online resources}
+\blu{NCBI: National Center for Biotechnology Information}\\
+\biskip
+\begin{columns}
+\begin{column}{0.5\textwidth}
+    \gr{l2_figs/s10_dbs.png}
+\end{column}
+\begin{column}{0.5\textwidth}
+NCBI’s mission includes:
+\begin{outline}
+\1 Establish public databases 
+\1 Develop software tools 
+\1 Education on and dissemination of biomedical information
+\end{outline}
+EBI we won’t cover in this course, but has similar features
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{NCBI overview}
+    \url{https://www.ncbi.nlm.nih.gov/}
+    \gr{l2_figs/s11_ncbi.png}
+\end{frame}
+
+\begin{frame}{NCBI overview}
+    \blu{Website:} \url{https://www.ncbi.nlm.nih.gov/}
+    \gr{l2_figs/s11_ncbi2.png}
+\end{frame}
+
+\section{Exercise 1}
+
+\begin{frame}{Question}
+\c{
+    \Large \blu{You keep hearing me talk about some bacterial gene family \textit{bont} that is a toxin to human hosts. But you have no idea what I'm talking about. What do you do?}
+}
+\end{frame}
+
+\begin{frame}{Search NCBI}
+    \gr{l2_figs/s13_bont.png}
+\end{frame}
+
+\begin{frame}{Select Gene database}
+    \gr{l2_figs/s14_bont.png}
+\end{frame}
+
+\begin{frame}{Filter and select results}
+    \gr{l2_figs/s15_bont.png}
+\end{frame}
+
+\begin{frame}{Gene page}
+    \gr{l2_figs/s16_bont.png}
+\end{frame}
+
+\begin{frame}{Connected entries}
+    \gr{l2_figs/s17_bont1.png}
+\end{frame}
+
+\begin{frame}{Connected entries}
+    \gr{l2_figs/s17_bont2.png}
+\end{frame}
+
+\begin{frame}{Protein families}
+    \gr{l2_figs/s18_bont_answer.png}
+\end{frame}
+
+\section{Common databases}
+
+\begin{frame}{GenBank overview}
+NCBI’s primary nucleotide-only sequence database
+\begin{outline}
+    \1 Archival in nature---reflect the state of knowledge at the time of submission
+    \1 Redundant---can have many copies of the same nucleotide sequence
+\end{outline}
+\end{frame}
+
+\begin{frame}{GenBank sequence record}
+\gr{l2_figs/s21_genbank_record1.png}
+\end{frame}
+
+\begin{frame}{GenBank sequence record, cont}
+\gr{l2_figs/s21_genbank_record2.png}
+\end{frame}
+
+\begin{frame}{GenBank sequence record, cont}
+\gr{l2_figs/s21_genbank_record3.png}
+\end{frame}
+
+\begin{frame}{Converting GenBank to FASTA}
+\gr{l2_figs/s21_genbank_record4.png}
+\end{frame}
+
+\begin{frame}{FASTA sequence record}
+\gr{l2_figs/s24_fasta1.png}
+\end{frame}
+
+\begin{frame}{FASTA sequence record, cont}
+\gr{l2_figs/s24_fasta2.png}
+\end{frame}
+
+\begin{frame}{FASTA sequence record, cont}
+\gr{l2_figs/s24_fasta3.png}
+\end{frame}
+
+\begin{frame}{Multi-FASTA sequence record}
+\gr{l2_figs/s26_multifasta1.png}
+\end{frame}
+
+\begin{frame}{Multi-FASTA sequence record, cont}
+\gr{l2_figs/s26_multifasta2.png}
+\end{frame}
+
+\begin{frame}{GenBank file format}
+\gr{l2_figs/s27_features1.png}
+\end{frame}
+
+\begin{frame}{GenBank file format, cont}
+\gr{l2_figs/s27_features2.png}
+\end{frame}
+
+\begin{frame}{GenBank file format, cont}
+\gr{l2_figs/s28_more_genbank1.png}
+\end{frame}
+
+\begin{frame}{GenBank file format, cont}
+\gr{l2_figs/s28_more_genbank2.png}
+\end{frame}
+
+\begin{frame}{RefSeq overview}
+Searching all of GenBank for ``bont'' returns 13,966 hits, each consisting of potentially the same sequence submitted in different lengths of DNA (\textit{bont} alone, \textit{bont}+next gene, etc.)\\
+\bigskip
+RefSeq has 20x fewer sequences
+\end{frame}
+
+\begin{frame}{RefSeq overview, cont}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+    \gr{l2_figs/s29_refseq.png}
+\end{column}
+\begin{column}{0.5\textwidth}
+    \footnotesize RefSeq entries:
+    \begin{outline}
+        \1 Hand-curated ``best'' representative of a transcript or protein
+        \1 Non-redundant for a given species
+        \1 Experimentally verified transcripts and proteins will begin with accession numbers \texttt{NM} or \texttt{NP}
+        \1 Model transcripts and proteins based on bioinformatic predictions with little experimental report begin with \texttt{XM\_} or \texttt{XP\_}
+        \1 RefSeq also contains contigs and chromosome records
+    \end{outline}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{UniProt overview}
+UniProt is a comprehensive, high-quality resource of protein sequence and functional information.\\
+\bigskip
+It is comprised of 4 databases:\\
+
+\begin{outline}[enumerate]
+    \1 \blu{UniProtKB} (Knowledgebase)
+        \2[] Containing Swiss-Prot and TrEMBL components (hand-curated and automatically annotated entries, respectively)
+    \1 \blu{UniRef} (Reference Clusters)
+        \2[] Filtered version of UniProtKB at various levels of sequence identity (eg UniRef90 contains sequences with a maximum of 90\% sequence identity to each other)
+    \1 \blu{UniParc} (Archive)
+        \2[] with database cross-references to source
+    \1 \blu{UniMES} (Metagenomic and Environmental Sequences)
+\end{outline}
+\end{frame}
+
+\begin{frame}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+    UniProt cross references many common databases, making it a good hub to determine and convert accession IDs
+\end{column}
+\begin{column}{0.5\textwidth}
+    \gr{l2_figs/s32_crossref.png}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{UniProt example}
+\gr{l2_figs/s33_uniprot_example.png}
+\end{frame}
+
+\section{Lab 2}
+
+\begin{frame}{Lab 2}
+Work in groups of 2-3.\\
+\bigskip
+The lab is to be handed in with the HW at the start of next week
+Labs are to be done in class – include partner name when handing in.\\
+\bigskip
+HWs must be done individually after class.
+\end{frame}
+
+
+\end{document}
