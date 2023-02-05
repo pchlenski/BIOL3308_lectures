@@ -1,0 +1,98 @@
+\documentclass{beamer}
+\usetheme{chlenski}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{outlines}
+\usepackage{hyperref}
+\usepackage[nodisplayskipstretch]{setspace}
+
+\title{Intro to Microbial Genomics}
+\subtitle{BIOL BC3308, Lecture 4}
+\author{Philippe Chlenski}
+\date{February 7, 2023}
+
+\renewcommand{\c}[1]{\begin{center}#1\end{center}}
+\newcommand{\blu}[1]{\textcolor{blue}{\textbf{#1}}}
+\newcommand{\red}[1]{\textcolor{red}{\textbf{#1}}}
+\newcommand{\yel}[1]{\textcolor{yellow}{\textbf{#1}}}
+\newcommand{\grn}[1]{\textcolor{dark-green}{\textbf{#1}}}
+\newcommand{\prp}[1]{\textcolor{purple}{\textbf{#1}}}
+\newcommand{\gr}[2][.95]{\c{\includegraphics[width=#1\textwidth]{#2}}}
+
+% \setbeameroption{show notes}
+
+\begin{document}
+
+\begin{frame}[plain]
+\titlepage
+\end{frame}
+
+\begin{frame}{Outline}
+\tableofcontents
+\end{frame}
+
+\section{Background and motivation}
+
+\begin{frame}{Overview}
+\begin{outline}
+\1[] Questions:
+    \2 What is genome assembly?
+\1[] Theory:
+    \2 Steps in genome assembly
+    \2 De Brujin graphs
+\1[] Practical considerations:
+    \2 Trimming sequences
+    \2 Determining the quality
+    \2 Assembling genomes
+\end{outline}
+\end{frame}
+
+\begin{frame}{What is genome assembly?}
+\gr{l4_figs/s3_intro.png}
+\end{frame}
+
+\begin{frame}{Sequencing by synthesis video}
+\url{https://www.youtube.com/watch?v=fCd6B5HRaZ8&t=3s}
+\end{frame}
+
+\begin{frame}{Illumina short reads and FASTQ files}
+\begin{outline}
+    \1[] High-throughput sequencing reads are usually output from sequencing facilities as text files in a format called “FASTQ” or “fastq”. 
+    \1[] This format is an extension of the commonly used FASTA format
+    \1[] Designed to handle base quality metrics output from sequencing machines
+    \1[] Uses 4 lines for each sequence, and these 4 lines are stacked on top of each other in text files output by sequencing workflows.
+\end{outline}
+\gr{l4_figs/s5_read.png}
+\end{frame}
+
+\begin{frame}{Basic steps for assembling a genome}
+\begin{enumerate}
+    \item Basic DNA sequence cleanup and evaluation
+    \item Contig building
+    \item Scaffolding
+    \item Post-assembly processing and analysis
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{1. Basic DNA sequence cleanup and evaluation}
+What are we looking for?
+\begin{outline}
+    \1 Is the DNA sequence high quality? Does it need to be trimmed?
+    \1 Evaluate libraries for coverage
+    \1 Any additional sequence preparation steps
+\end{outline}
+\end{frame}
+
+\begin{frame}{1. Basic DNA sequence cleanup and evaluation, cont}
+\gr{l4_figs/s8_scores.png}
+$Q = -10 \log_{10}(P)$, where $P$ is the probability that a base call is erroneous
+\end{frame}
+
+\begin{frame}{1. Basic DNA sequence cleanup and evaluation, cont}
+\gr{l4_figs/s9_fastq.png}
+Cleanup: trim reads for bases that fall below quality score
+\end{frame}
+
+\b
+
+\end{document}
