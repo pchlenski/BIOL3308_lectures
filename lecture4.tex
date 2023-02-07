@@ -74,8 +74,9 @@
 \end{enumerate}
 \end{frame}
 
-\begin{frame}{1. Basic DNA sequence cleanup and evaluation}
-What are we looking for?
+\section{Sequence cleanup}
+
+\begin{frame}{What are we looking for?}
 \begin{outline}
     \1 Is the DNA sequence high quality? Does it need to be trimmed?
     \1 Evaluate libraries for coverage
@@ -83,16 +84,225 @@ What are we looking for?
 \end{outline}
 \end{frame}
 
-\begin{frame}{1. Basic DNA sequence cleanup and evaluation, cont}
+\begin{frame}{Phred quality scores}
 \gr{l4_figs/s8_scores.png}
 $Q = -10 \log_{10}(P)$, where $P$ is the probability that a base call is erroneous
 \end{frame}
 
-\begin{frame}{1. Basic DNA sequence cleanup and evaluation, cont}
-\gr{l4_figs/s9_fastq.png}
+\begin{frame}{FASTQC for quality control}
+\gr{l4_figs/s9_fastqc.png}
 Cleanup: trim reads for bases that fall below quality score
 \end{frame}
 
-\b
+\begin{frame}{Genome coverage}
+\gr[0.5]{l4_figs/s10_coverage.png}
+\end{frame}
+
+\begin{frame}{Genome coverage, cont}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+    \gr{l4_figs/s11_sequencers.png}
+\end{column}
+\begin{column}{0.5\textwidth}
+    \footnotesize
+    \[
+        \text{Avg coverage} = \frac{\text{read length} \times \text{read count}}{\text{total genome size}}
+    \]
+    \blu{Example:} I sequence a 4.6Mb-long genome on one flow cell lane using a miSeq instrument. I use 150bp paired-end reads. If one flow cell lane generates 25 million reads, what is my expected coverage?
+    \begin{align*}
+        \text{Read length} &= 150 * 2 = 300\\
+        \text{Read count} &= 25,000,000\\
+        \text{Genome size} &= 4,600,000\\
+        \implies \text{Avg. coverage} &= 1630X
+    \end{align*}
+\end{column}
+\end{columns}
+\end{frame}
+
+\section{Contig building}
+
+\begin{frame}{What are contigs?}
+\blu{Contig:} A \textit{contig}uous, unambiguous stretch of assembled DNA sequence
+\begin{columns}
+\begin{column}{0.4\textwidth}
+    The ends of a contig correspond to:\\
+    \bigskip
+    \begin{outline}
+        \1 Real ends (for linear DNA molecules)
+        \1 Dead ends (missing sequence)
+        \1 Forks in the road
+    \end{outline}
+    Can be stored in FASTA or multi-FASTA format
+\end{column}
+\begin{column}{0.4\textwidth}
+    \gr{l4_figs/s12_contig.png}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Algorithm overview}
+\begin{outline}
+    \1[] Find all overlaps between reads
+    \1[] Build a graph
+    \1[] Simplify the graph
+    \1[] Traverse the graph
+    \2 A graph is a tuple $\{V, E\}$ where $V$ is a set of \red{vertices} and $E$ is a set of \blu{edges}
+\end{outline}
+\gr{l4_figs/s13_contig_building.png}
+\end{frame}
+
+\begin{frame}{De Bruijn graph}
+    \blu{De Bruijn graph} assemblers are developed to deal with high-throughput, highly accurate short-read data
+    \begin{columns}
+    \begin{column}{0.5\textwidth}
+        \gr{l4_figs/s0_debruijn.png}
+        \tiny Source: \url{https://en.wikipedia.org/wiki/De_Bruijn_graph}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+        \begin{outline}
+            \1 Nodes: all possible strings, e.g. all $4^k$ possible $k$-mers
+            \1 Edges: if it's possible for the next string to be this node:
+                \2 Intuition: take off first character, add any character to the end
+                \2 Can't go 000 $\to$ 111 directly. Why?
+        \end{outline}
+    \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Properties of de Bruijn graphs}
+For an idealized de Bruijn graph:
+    \begin{outline}
+        \1 If $m$ is the size of your alphabet, each vertex has exactly $m$ incoming edges and $m$ outgoing edges
+        \1 De Bruijn graphs are \blu{Eulerian}: you can visit each \blu{edge} once and end up where you started
+        \1 They are also \red{Hamiltonian}: you can visit each \red{node} once and end up where you started
+    \end{outline}
+    This allows us to do an \blu{Euler tour}, visiting each node in the graph once. The order of visits tells us the original sequence.
+\end{frame}
+
+\begin{frame}{Practical considerations}
+When we construct de Bruijn graphs from actual sequencing reads:
+\begin{outline}
+    \1 We restrict ourselves to a subset of nodes
+    \1 We may have multiple edges (use a directed \textit{multi}graph)
+\end{outline}
+To do a true Euler tour, we need:
+\begin{outline}
+    \1 Every node to have equal in-degree and out-degree
+        \2 For an Euler \textit{trail} (start and end points are different), we allow one pair of nodes $(i, j)$ to have $(in\_degree(i)  - out\_degree(i)) = 1$ and $(out\_degree(j) - in\_degree(j)) = 1$
+    \1 All nodes in one strongly connected component
+\end{outline}
+We use approximate algorithms to extract contigs from messy empirical graphs.
+\end{frame}
+
+\begin{frame}{Shredded book reconstruction}
+Suppose you accidentally shredded a manuscript of \textit{A Tale of Two Cities}\\
+\bigskip
+How can we reconstruct it? Suppose we have 5 copies $\times$ 138,656 words / 5 words per fragment = 138,656 fragments drawn at random.\\
+\bigskip
+\red{Example sentence:} \blu{It was the best of} times, \blu{it was the worst of} times, \grn{it was the age of} wisdom, \grn{it was the age of} foolishness\ldots
+\end{frame}
+
+\begin{frame}{Overlaps between fragments are implicitly computed}
+\gr{l4_figs/s17_twocities.png}
+\end{frame}
+
+\begin{frame}{Completed de Bruijn graph, 5-mers}
+\gr{l4_figs/s18_graph.png}
+\end{frame}
+
+\begin{frame}{Simplified de Bruijn graph}
+\gr{l4_figs/s19_subgraph.png}
+\end{frame}
+
+\begin{frame}{Larger graph}
+\gr{l4_figs/s20_table.png}
+\end{frame}
+
+\begin{frame}{DNA version}
+\gr{l4_figs/s21_kmers.png}
+\end{frame}
+
+\begin{frame}{De Bruijn graph recap}
+\begin{enumerate}
+    \item Choose a value for $k$ (or use the $k$ you're given)
+    \begin{itemize}
+        \item This must be less than your fragment size. For sequencing, fragment size = read length
+    \end{itemize}
+    \item Get all $k$-mers of your sequence
+    \item Set $k$-mers as your nodes, and connect them according to overlaps in $(k-1)$-mers
+    \begin{itemize}
+        \item Intuitively: if you added a character to the end of your $k$-mer and forgot the first character, where could you possibly end up?
+    \end{itemize}
+    \item Simplify!
+    \begin{itemize}
+        \item (Use a computer for this)
+    \end{itemize}
+\end{enumerate}
+
+See \url{https://homolog.us/Tutorials/book4/p2.1.html} for a worked example
+\end{frame}
+
+\begin{frame}{In reality, the graphs can get messy\ldots}
+\gr{l4_figs/s23_real_graph.png}OK
+\end{frame}
+
+\section{Scaffolding and assessment}
+
+\begin{frame}{Scaffolding intro}
+Now you have a huge pile of contigs but you want to make them larger. How? Add context!\\
+\bigskip Use other information you might have (e.g. mate pairs) and link together contigs
+\gr{l4_figs/s24_scaffolding.png}
+\end{frame}
+
+\begin{frame}{Long reads}
+\blu{Long read sequencing} technology can help scaffold together contigs from short-read but high-fidelity platforms: 
+\gr{l4_figs/s25_long_reads.png}
+\end{frame}
+
+\begin{frame}{Assessing your assembly}
+\begin{outline}
+    \1[] How much total sequence is in the assembly relative to estimated genome size?
+    \1[] How many pieces (contigs), and what is the distribution of their sizes?
+    \1[] Are the contigs assembled correctly?
+    \1[] Are the scaffolds connected in the right order and orientation?
+    \1[] Are all the genes I expect to be in the assembly there? Do they appear in the right amounts?
+\end{outline}
+\end{frame}
+
+\begin{frame}{Assessing your assembly, cont}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+ \begin{outline}
+     \1[] \blu{N50:} The most common measure of assembly quality
+        \2[] Def: medium contig length
+    \1[] Other common metrics:
+        \2 Mappable reads
+        \2 Total length
+        \2 Number of contigs
+ \end{outline}
+\end{column}
+\begin{column}{0.5\textwidth}
+    \gr{l4_figs/s27_quality.png}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Other considerations}
+\begin{enumerate}
+    \item How large and complex is the genome?
+    \item Is my coverage sufficient?
+    \item What technology was used to sequence? (Long vs. short reads)
+    \item Is there a good reference sequence?
+    \item What about repeats?\footnote{It is impossible to resolve repeats that are longer than your read length. Why?}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Lab 4}
+Topic: \blu{Bash, genome assembly, and comparison}\\
+\bigskip
+Work in groups of 2.\\
+\bigskip
+The lab is to be handed in with the HW at the start of next week.
+\end{frame}
 
 \end{document}
