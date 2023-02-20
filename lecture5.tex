@@ -1,0 +1,484 @@
+\documentclass{beamer}
+\usetheme{chlenski}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{outlines}
+\usepackage{hyperref}
+\usepackage{babel}
+\usepackage[nodisplayskipstretch]{setspace}
+
+\title{Intro to Microbial Genomics}
+\subtitle{BIOL BC3308, Lecture 5}
+\author{Philippe Chlenski}
+\date{February 14, 2023}
+
+\renewcommand{\c}[1]{\begin{center}#1\end{center}}
+\newcommand{\blu}[1]{\textcolor{blue}{\textbf{#1}}}
+\newcommand{\red}[1]{\textcolor{red}{\textbf{#1}}}
+\newcommand{\yel}[1]{\textcolor{yellow}{\textbf{#1}}}
+\newcommand{\grn}[1]{\textcolor{dark-green}{\textbf{#1}}}
+\newcommand{\prp}[1]{\textcolor{purple}{\textbf{#1}}}
+\newcommand{\gr}[2][.95]{\c{\includegraphics[width=#1\textwidth]{#2}}}
+
+% \setbeameroption{show notes}
+
+\begin{document}
+
+\begin{frame}[plain]
+\titlepage
+\end{frame}
+
+\begin{frame}{Outline}
+\tableofcontents
+\end{frame}
+
+\section{Background and motivation}
+
+\begin{frame}{Overview}
+    \begin{outline}
+        \1[] Questions:
+            \2 How can we represent relatedness between organisms?
+            \2 How to find the best phylogenetic tree given data?
+        \1[] Theory:
+            \2 Parsimony method
+            \2 Distance method
+        \1[] Practice:
+            \2 Simple distance matrix/tree
+            \2 Tree by ST
+    \end{outline}
+\end{frame}
+
+\begin{frame}{The first tree?}
+    \begin{columns}
+        \begin{column}{0.7\textwidth}
+            ``As buds give rise by growth to fresh buds, and these, if vigorous, branch out and overtop on all sides many a feebler branch, so by generation I believe it has been with the great Tree of Life, which fills with its dead and broken branches the crust of the earth, and covers the surface with its ever-branching and beautiful ramifications.''\\
+            \bigskip
+            \hfill Charles Darwin, \textit{On the origin of species}
+        \end{column}
+        \begin{column}{0.3\textwidth}
+            \gr{l5_figs/darwin.png}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Intro to trees}
+    Life on earth evolved from a common ancestor---so of course biologists looked for a way to represent this!\\
+    \bigskip
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            We came up with trees as a way to show the relationship of different species, much like a family tree shows the relationship between you and your relatives.
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \gr{l5_figs/s4_tree_archaea.png}
+        \end{column}
+    \end{columns}
+    \bigskip
+    In biology, these are called \blu{phylogenetic trees}.
+\end{frame}
+
+\begin{frame}{Intro to trees, cont}
+    Trees are not static! For example, Archaea did not ``exist'' before Carl Woese discovered them in 1977.\\
+    \bigskip
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \gr{l5_figs/s4_tree_no_archaea.png}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \gr{l5_figs/s4_tree_archaea.png}
+        \end{column}
+    \end{columns}
+    \bigskip
+    What other technologies may have made this discovery possible?
+\end{frame}
+
+\begin{frame}{Intro to trees, cont}
+    A tree can be organized according to any property you want\\
+    \bigskip
+    Early on, trees were constructed on \blu{morphological phylogeny} (do animals share common physical features?)\\
+    \bigskip
+    Now, we generally look at genetic relatedness (\blu{molecular phylogeny})\\
+    \bigskip
+    In microbiology, we generally use genome similarity
+\end{frame}
+
+% \begin{frame}{Tree thinking}
+% % Tree topology
+% % Clade
+% % Emphasize distance to common ancestor / free rotation
+% Thinking in terms of evolutionary trees can be unintuitive, and can require some practice.
+% \end{frame}
+
+\begin{frame}{Parts of a tree}
+Important components of a tree:
+\gr{l5_figs/s6_tree1.png}
+\end{frame}
+
+\begin{frame}{Properties of a tree}
+A phylogenetic tree is a best guess:
+\gr{l5_figs/s7_tree2.png}
+We don't really know what happens at internal nodes\\
+\bigskip
+We infer relationships based on the species we can observe
+\end{frame}
+
+\begin{frame}{Tree distances}
+Branch length corresponds to ``distance'' between taxa; what does this mean? It depends on how we define it!\\
+\bigskip
+Common branch ``units'':
+\begin{outline}
+    \1 Physical traits
+    \1 Genetic traits
+    \1 Genetic ``distance'' calculated from sequence
+    \1 \ldots
+\end{outline}
+\end{frame}
+
+\begin{frame}{Tree distance practice}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \gr{l5_figs/s8_viral_tree.png}
+            \tiny \url{https://artic.network/how-to-read-a-tree.html}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            Questions:
+            \begin{outline}
+                \1 What does the horizontal axis (from left to right) of this tree represent?
+                \1 Which of the viruses represented on the tree is the oldest?
+                \1 Which virus is most closely related to virus1? Most distantly?
+                \1 Which virus is most closely related to virus8?
+            \end{outline}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Tree distance practice, cont}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \gr[0.8]{l5_figs/s9_2trees.png}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            Questions:
+            \begin{outline}
+                \1 Which is more closely related to the frog: human or fish?
+                \1 Which is more closely related to the fish: frog or human?
+            \end{outline}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Tree thinking}
+    Thinking in terms of trees can be very unintuitive! Some common errors people make with trees are:
+    \begin{enumerate}
+        \item Thinking of ``higher'' and ``lower'' species
+        \item Imagining a ``main line'' and ``side tracks''
+        \item Reading across tips
+        \item Conflating relatedness and similarity
+        \item Treating siblings as ancestors
+        \item Thinking long branches mean no change
+        % \item All lineage ages are the same
+        % \item Backwards time axes
+        % \item More intervening nodes $\neq$ more distantly related
+        % \item Change only at nodes
+    \end{enumerate}
+    For more tree thinking resources, try \blu{\href{https://evolution.berkeley.edu/evolution-101/}{this website}}
+\end{frame}
+
+\begin{frame}{Phylogenetics background}
+    \blu{Phylo}\red{genetics}:
+    \begin{outline}
+        \1[] \blu{Phylo ($\textcolor{blue}{\phi\upsilon\lambda\omega\nu}$)}: tribe, genus, species
+        \1[] \red{Genetics ($\textcolor{red}{\gamma\iota\gamma\nu\omega\alpha\iota}$)}: coming into being
+    \end{outline}
+    \bigskip
+    \textbf{Definition}: The systematic study of organism relationships based on evolutionary similarities and differences
+\end{frame}
+
+\begin{frame}{Phylogenetics terms}
+\begin{columns}
+    \begin{column}{0.7\textwidth}
+        \blu{Unrooted tree}: no ancestor-descendent relationship beyond the observation ``leaves are not ancestors''\\
+        \bigskip
+        \red{Rooted tree}: the root is the ancestor to the other species in the tree\\
+        \bigskip
+        \grn{Node}: leaf or branch point\\
+        \bigskip
+        A tree with $n$ nodes has $n-1$ ways of rooting it
+    \end{column}
+    \begin{column}{0.3\textwidth}
+        \gr{l5_figs/s10_unrooted_tree.png}
+        Unrooted tree\\
+        \bigskip
+        \gr{l5_figs/s10_rooted_tree.png}
+        Rooted tree
+    \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Node counting}
+    \begin{columns}
+        \begin{column}{0.7\textwidth}
+            An \blu{unrooted tree} with $n$ leaves has $2n-2$ nodes\\
+            \bigskip
+            A \red{rooted tree} with $n$ leaves has $2n-1$ nodes\\
+            \bigskip
+            Assign the following labels to nodes in a rooted tree:
+            \begin{outline}
+                \1 Leaf nodes: $1,2,\ldots,n$
+                \1 Internal nodes: $n+1, n+2, \ldots, 2n-1$
+                \1 Root node: $2n-1$
+            \end{outline}
+        \end{column}
+        \begin{column}{0.3\textwidth}
+            \gr{l5_figs/s11_phylogenetic_tree.png}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Tree combinatorics}
+    The number of possible rooted and unrooted trees for $n$ species (leaves) increases exponentially with $n$:
+    \gr[0.5]{l5_figs/s13_possible_trees.png}
+    In fact, tree reconstruction in general is NP-hard! We use faster heuristic algorithms instead.
+\end{frame}
+
+\begin{frame}{General approach to phylogeny}
+    \begin{outline}
+        \1 Use only sequences that evolved from a common ancestor (homologous)!
+        \1 Compute alignment
+        \1 Construct a phylogeny using 1 of 2 approaches
+            \2 Character-based methods
+                \3 Input: Sequence alignment
+                \3 Output: Phylogenetic tree
+                \3 Accurate but computationally very expensive
+            \2 Distance-based methods
+                \3 Input: Distance matrix containing pairwise statistical estimation of aligned sequences
+                \3 Output: Phylogenetic tree
+                \3 Fast but less accurate
+    \end{outline}
+\end{frame}
+
+\section{Character-based algorithms}
+\begin{frame}{Character-based algorithms overview}
+    Character-based algorithms score and build trees by evaluating the probability that a given tree would yield the sequences of its leaf nodes.\\
+    \bigskip
+    Two main character-based algorithms:
+    \begin{outline}
+        \1 Parsimony
+        \1 Maximum likelihood
+    \end{outline}
+\end{frame}
+
+\begin{frame}{Parsimony}
+    \blu{General idea:} find the tree that explains the observed sequences with a minimal number of substitutions.\\
+    \bigskip
+    Two steps:
+    \begin{enumerate}
+        \item Compute the smallest number of substitutions for a given tree with a parsimony algorithm 
+        \item Search for the tree with the minimal number of substitutions
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Parsimony example}
+    Consider the following sequences with 105 possible rooted trees:
+    \begin{center}
+        \texttt{%
+            A C T T T\\
+            A C A T T\\
+            A A C G T\\
+            A A T G T\\
+            A A T T T\\
+        }
+    \end{center}
+    \bigskip
+    Which of the following trees explains the sequences with the least number of substitutions?
+\end{frame}
+
+\begin{frame}{Parsimony example, cont}
+    \gr{l5_figs/s15_parsimonious.png}
+\end{frame}
+
+\begin{frame}{Parsimony example, cont}
+    \gr{l5_figs/s16_parsimonious2.png}
+\end{frame}
+
+\begin{frame}{Parsimony method thoughts}
+    \begin{outline}
+        \1[] Requires sequences to be the same length
+            \2 First, align sequences, and remove indels
+            \2 Then compute parsimony for the resulting sequences
+            \2 Alternatively, indels if present can be considered as characters
+        \1[] Is the most parsimonious tree the correct tree?
+            \2 Not necessarily, but it explains the sequences with least number of substitutions
+            \2 We model the probability of having fewer mutations as higher than having many
+    \end{outline}
+\end{frame}
+
+\begin{frame}{Maximum likelihood trees}
+    Most tree-building programs (RaxML, FastTree, et al) use what are known as Maximum Likelihood (ML) tree-building in order to build trees quickly, efficiently and (relatively) accurately for hundreds or thousands of nodes.\\
+    \bigskip
+    Since we’re focused on practical applications in this class, we won’t go into the gory details of ML algorithms!\\
+    \bigskip
+    \footnotesize (If you really want to dig into the details, \blu{\href{https://scholarship.claremont.edu/cgi/viewcontent.cgi?article=1047&context=scripps_theses}{this page}} is a good start)
+    \end{frame}
+
+\section{Distance-based algorithms}
+\begin{frame}{Distance-based algorithms overview}
+    \begin{columns}
+        \begin{column}{0.6\textwidth}
+            Distance-based algorithms operate on the set of pairwise distances $\delta_{i,j}$ between leaves.\\
+            \bigskip
+            These distances are represented in a \blu{distance matrix}.\\
+            \bigskip
+            Examples of distance-based algorithms:
+            \begin{outline}
+                \1 Neighbor-joining
+                \1 Unweighted pair group method with arithmetic mean (UPGMA)
+            \end{outline}
+        \end{column}
+        \begin{column}{0.4\textwidth}
+            \gr{l5_figs/s18_distance.png}
+            Distance $\delta_{i,j}$ states \red{how far apart} species $i$ and $j$ are evolutionarily, e.g. $-1 \times$ alignment score. 
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Distance matrix example}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \gr[0.8]{l5_figs/s19_dist_matrix.png}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \red{Goal}: build a tree (with known edge distances) from the distance matrix to the left!\\
+            \bigskip
+            First, decide whether to build a rooted or unrooted tree. Next, determine how many nodes and edges there are: we have 4 leaves, which means we will have $2 \times 4 - 1 = 7$ nodes for a rooted tree or 6 for an unrooted tree.
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Distance matrix example, cont}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \gr[0.8]{l5_figs/s19_dist_matrix.png}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \gr{l5_figs/s20_tree1.png}
+            \footnotesize A and B are closest to each other, and C and D are closest to each other, so this is a good guess at an initial tree!
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Distance matrix example, cont}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \gr[0.8]{l5_figs/s19_dist_matrix.png}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \gr[0.8]{l5_figs/s21_tree2.png}
+            \footnotesize Now, write an equation for each pair of nodes and decompose according to $\delta_{i,j} = \delta_{i,k} + \delta_{j,k}$
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Distance matrix example, cont}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \gr[0.8]{l5_figs/s19_dist_matrix.png}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \gr[0.8]{l5_figs/s21_tree2.png}
+            \footnotesize We introduce labels $k_1, k_2, k_3$ for ancestral nodes in the tree before setting up our system of equations.
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Distance matrix example, cont}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \footnotesize
+            \begin{align*}
+                \delta_{A,B} &= \delta_{A,k_1} + \delta_{B,k_1} &= 2\\
+                \delta_{A,C} &= \delta_{A,k_3} + \delta_{C,k_3}\\
+                &= \delta_{A,k_1} + \delta_{k_1, k_3} + \delta_{C, k_2} + \delta_{k_2, k_3} &= 4\\
+                \delta_{A, D} &= \delta_{A, k_3} + \delta_{D, k_3}\\
+                &= \delta_{A, k_1} + \delta_{k_1, k_3} + \delta_{D, k_2} + \delta_{k_2, k_3} &= 4\\
+                \delta_{B,C} &= \delta_{B,k_3} + \delta_{C,k_3}\\
+                &= \delta_{B,k_1} + \delta_{k_1,k_3} + \delta_{C,k_2} + \delta_{k_2,k_3} &=4\\
+                \delta_{B,D} &= \delta_{B,k_3} + \delta_{D,k_3}\\
+                &= \delta_{B,k_1} + \delta_{k_1,k_3} + \delta_{D,k_2} + \delta_{k_2,k_3} &=4\\
+                \delta_{C,D} &= \delta_{C,k_2} + \delta_{D,k_2} &= 2
+            \end{align*}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \gr[0.8]{l5_figs/s21_tree2.png}
+            \footnotesize This system of equations combines our tree topology and distance matrix. We can solve for branch lengths.
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Distance matrix example, cont}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \footnotesize
+            \begin{align*}
+                \delta_{A,B} &= \textcolor{blue}{\delta_{A,k_1}} + \textcolor{red}{\delta_{B,k_1}} &= 2\\
+                \delta_{A,C} &= \delta_{A,k_3} + \delta_{C,k_3}\\
+                &= \textcolor{blue}{\delta_{A,k_1}} + \textcolor{purple}{\delta_{k_1, k_3}} + \textcolor{green}{\delta_{C, k_2}} + \textcolor{dark-blue}{\delta_{k_2, k_3}} &= 4\\
+                \delta_{A, D} &= \delta_{A, k_3} + \delta_{D, k_3}\\
+                &= \textcolor{blue}{\delta_{A, k_1}} + \textcolor{purple}{\delta_{k_1, k_3}} + \textcolor{yellow}{\delta_{D, k_2}} + \textcolor{dark-blue}{\delta_{k_2, k_3}} &= 4\\
+                \delta_{B,C} &= \delta_{B,k_3} + \delta_{C,k_3}\\
+                &= \textcolor{red}{\delta_{B,k_1}} + \textcolor{purple}{\delta_{k_1,k_3}} + \textcolor{green}{\delta_{C,k_2}} + \textcolor{dark-blue}{\delta_{k_2,k_3}} &=4\\
+                \delta_{B,D} &= \delta_{B,k_3} + \delta_{D,k_3}\\
+                &= \textcolor{red}{\delta_{B,k_1}} + \textcolor{purple}{\delta_{k_1,k_3}} + \textcolor{yellow}{\delta_{D,k_2}} + \textcolor{dark-blue}{\delta_{k_2,k_3}} &=4\\
+                \delta_{C,D} &= \textcolor{green}{\delta_{C,k_2}} + \textcolor{yellow}{\delta_{D,k_2}} &= 2            \end{align*}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \gr[0.8]{l5_figs/s23_tree3.png}
+            \footnotesize Solving the system of equations on the left yields branch lengths $\textcolor{blue}{\delta_{A,k_1}}, \textcolor{red}{\delta_{B,k_1}}, \textcolor{green}{\delta_{C,k_2}}, \textcolor{yellow}{\delta_{D,k_2}}, \textcolor{purple}{\delta_{k_1,k_3}}, \textcolor{dark-blue}{\delta_{k_2,k_3}}$
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Distance matrix example, cont}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \gr{l5_figs/s19_dist_matrix.png}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \gr{l5_figs/s23_tree3.png}
+            What are the issues with this method?
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Algorithms for additive trees}
+    In the previous example, we guessed at the tree structure. This isn’t ideal if we have hundreds or thousands of nodes! There are two main categories of additive tree-building algorithms that automate this process, and we will (very briefly) discuss:
+    \begin{outline}
+        \1 \blu{UPGMA}: constructs a rooted tree by clustering nodes iteratively
+        \1 \blu{Neighbor Joining}: constructs an unrooted tree by clustering similarly to UPGMA
+    \end{outline}
+    These two algorithms were somewhat basic methods to construct trees; they require a distance matrix and additive data.\\
+    \bigskip
+    \red{Problem}: We may not have an explicit distance matrix, and we almost certainly don’t have additive data!
+\end{frame}
+
+
+% \section{Other algorithms}
+% \begin{frame}{}
+%     \ldots
+% \end{frame}
+
+
+\section{Lab 5}
+\begin{frame}{Lab 5}
+    \blu{Topic: Phylogenetic trees}\\
+    \bigskip
+    Work in groups of 2\\
+    \bigskip
+    The lab is to be handed in with the HW at the start of next week
+    \begin{outline}
+        \1 Labs are to be done in class here
+        \1 HWs must be done individually after class
+    \end{outline}
+\end{frame}
+
+
+\end{document}

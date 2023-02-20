@@ -1,0 +1,58 @@
+\documentclass{beamer}
+\usetheme{chlenski}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{outlines}
+\usepackage{hyperref}
+\usepackage{babel}
+\usepackage[nodisplayskipstretch]{setspace}
+
+\title{Intro to Microbial Genomics}
+\subtitle{BIOL BC3308, Lecture 6}
+\author{Philippe Chlenski}
+\date{February 21, 2023}
+
+\renewcommand{\c}[1]{\begin{center}#1\end{center}}
+\newcommand{\blu}[1]{\textcolor{blue}{\textbf{#1}}}
+\newcommand{\red}[1]{\textcolor{red}{\textbf{#1}}}
+\newcommand{\yel}[1]{\textcolor{yellow}{\textbf{#1}}}
+\newcommand{\grn}[1]{\textcolor{dark-green}{\textbf{#1}}}
+\newcommand{\prp}[1]{\textcolor{purple}{\textbf{#1}}}
+\newcommand{\gr}[2][.95]{\c{\includegraphics[width=#1\textwidth]{#2}}}
+
+% \setbeameroption{show notes}
+
+\begin{document}
+
+\begin{frame}[plain]
+\titlepage
+\end{frame}
+
+\begin{frame}{Outline}
+\tableofcontents
+\end{frame}
+
+\section{Background and motivation}
+
+\begin{frame}{Overview}
+    \begin{outline}
+        \1[] Questions:
+            \2 Why are we interested in comparing genomes to a reference?
+            \2 How do we map reads efficiently?
+        \1[] Theory:
+            \2 Suffix arrays
+            \2 Burrows Wheeler Transformation
+            \2 Variant calling
+        \1[] Practice:
+            \2 BWA alignments
+            \2 SNIPPY mutation detection
+    \end{outline}
+\end{frame}
+
+\begin{frame}{Personal genomics}
+    \ldots
+\end{frame}
+
+\section{}
+
+\end{document}
