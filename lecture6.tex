@@ -5,6 +5,7 @@
 \usepackage{outlines}
 \usepackage{hyperref}
 \usepackage{babel}
+\usepackage{verbatim}
 \usepackage[nodisplayskipstretch]{setspace}
 
 \title{Intro to Microbial Genomics}
@@ -50,9 +51,396 @@
 \end{frame}
 
 \begin{frame}{Personal genomics}
-    \ldots
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            Suppose we have a reference sequence and reads, with mutations, from different patients.\\
+            \bigskip We want to see whether they have mutations that match certain phenotypes.
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \gr{l6_figs/s3_snps.png}
+            \gr[0.6]{l6_figs/s3_phenotypes.png}
+        \end{column}
+    \end{columns}
 \end{frame}
 
-\section{}
+\begin{frame}{Three strategies for read mapping}
+    \begin{enumerate}
+        \item Brute force approach
+        \item Binary search in suffix arrays
+        \item Burrows-Wheeler transform
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Strategy 1: brute force}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            The first strategy is a \blu{brute force approach}:\\ 
+            \bigskip
+            At every offset, check to see if the characters of the query match
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \gr{l6_figs/s3_snps.png}
+        \end{column}
+    \end{columns}
+    \bigskip \centering
+    Is this a good approach?
+\end{frame}
+
+\begin{frame}{Reflecting on the brute force approach}
+    Suppose we want to map the read \texttt{GATTACA}:
+    \gr{l6_figs/s5_read_mapping.png}
+    What do you see that doesn't make sense?
+\end{frame}
+
+\begin{frame}{Reflecting on the brute force approach, cont}
+    Suppose we want to map the read \texttt{GATTACA}:
+    \gr{l6_figs/s5_read_mapping.png}
+    What do you see that doesn't make sense?
+    \begin{outline}
+        \1 \texttt{GATTACA} can't possibly begin at position 4
+    \end{outline}
+    If we only had one query, maybe this is as good as it gets.\\
+    \bigskip
+    What if we have lots of queries?
+\end{frame}
+
+\section{Suffix arrays}
+
+\begin{frame}{Alternative: suffix arrays}
+    We can think of suffix arrays by analogy to searching through a phone book:
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{outline}
+                \1 Suppose we need to check many queries
+                \1 Why is searching the phone book efficient?
+                    \2 If we want to look up \blu{Chlenski} in the phone book, we don't start at page 1 and continue
+                    \2 Starting with \blu{C}, lets us skip $25/26 \approx 96\%$ of the book \red{without any loss of accuracy!}
+            \end{outline} 
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \gr{l6_figs/s6_suffix_arrays.png}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Suffix arrays, definition}
+    A suffix array is a lexicographically sorted array of all suffixes of a string:
+    \gr[0.6]{l6_figs/s7_suffix_array2.png}
+\end{frame}
+
+\begin{frame}{Searching the phone book}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            We can do \blu{binary search} over suffix arrays: compare to middle, then search higher/lower; rinse and repeat.\\
+            \bigskip
+            Searching for \texttt{GATTACA}:\\
+            \bigskip
+            Low = 1\\
+            High = 15
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \gr{l6_figs/s8_phonebook.png}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Searching the phone book, cont}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            We can do \blu{binary search} over suffix arrays: compare to middle, then search higher/lower; rinse and repeat.\\
+            \bigskip
+            Searching for \texttt{GATTACA}:\\
+            \bigskip
+            Mid = (1 + 15)/2 = 8\\
+            Middle = suffix[8] = \texttt{CC}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \gr{l6_figs/s9_phonebook2.png}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Searching the phone book, cont}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            We can do \blu{binary search} over suffix arrays: compare to middle, then search higher/lower; rinse and repeat.\\
+            \bigskip
+            Searching for \texttt{GATTACA}:\\
+            \bigskip
+            \red{Go higher:} Low = Mid + 1 = 9
+            High = 15
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \gr{l6_figs/s11_phonebook3.png}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Searching the phone book, cont}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            We can do \blu{binary search} over suffix arrays: compare to middle, then search higher/lower; rinse and repeat.\\
+            \bigskip
+            Searching for \texttt{GATTACA}:\\
+            \bigskip
+            Mid = (9+15)/2 = 12\\
+            Middle = suffix[12] = \texttt{TACC}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \gr{l6_figs/s12_phonebook4.png}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Searching the phone book, cont}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            We can do \blu{binary search} over suffix arrays: compare to middle, then search higher/lower; rinse and repeat.\\
+            \bigskip
+            Searching for \texttt{GATTACA}:\\
+            \bigskip
+            \red{Go lower:} High = Mid - 1 = 11\\
+            Low = 9
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \gr{l6_figs/s12_phonebook4.png}
+        \end{column}
+    \end{columns}
+\end{frame} 
+
+\begin{frame}{Searching the phone book, cont}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            We can do \blu{binary search} over suffix arrays: compare to middle, then search higher/lower; rinse and repeat.\\
+            \bigskip
+            Searching for \texttt{GATTACA}:\\
+            \bigskip
+            Mid = (9 + 11)/2 = 10\\
+            Middle = suffix[10] = \texttt{GATTACC}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \gr{l6_figs/s13_phonebook5.png}
+        \end{column}
+    \end{columns}
+\end{frame} 
+
+\begin{frame}{Searching the phone book, cont}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            We can do \blu{binary search} over suffix arrays: compare to middle, then search higher/lower; rinse and repeat.\\
+            \bigskip
+            Searching for \texttt{GATTACA}:\\
+            \bigskip
+            Low = Mid = High = 9\\
+            We have converged
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \gr{l6_figs/s14_phonebook6.png}
+        \end{column}
+    \end{columns}
+\end{frame} 
+
+\begin{frame}{Reflecting on binary search}
+    \begin{outline}
+        \1[] Binary search:
+            \2 Initialize search range to entire list
+                \3 Mid = (high + low)/2; middle = suffix[mid]
+                \3 If query matches middle: done
+                \3 Else if query < middle: pick low range
+                \3 Else if query > middle: pick high range
+            \2 Repeat until done 
+        \1[] Analysis
+            \2 More complicated method
+            \2 How many times do we repeat?
+        \1[] Limitations? 
+            \2 HUGE data sizes! Storing multiple copies of redundant information
+            \2 How can we store suffix arrays of billions of characters?
+    \end{outline}
+\end{frame}
+
+\section{Burrows-Wheeler}
+
+\begin{frame}{Intro to Burrows-Wheeler}
+    Algorithmic challenge: how do we combine the speed of suffix array with the size of a brute force analysis?\\
+    \bigskip
+    Reversible permutation of characters:
+    \gr[0.8]{l6_figs/s16_bwt.png}
+    \tiny A block sorting lossless data compression algorithm. Burrows M, Wheeler DJ (1994) Digital Equipment Corporation. Technical Report 124
+\end{frame}
+
+\begin{frame}{Run length encoding}
+    \begin{center}
+        \tiny REF [614]:
+        \begin{verbatim}
+            It\_was\_the\_best\_of\_times,\_it\_was\_the\_worst\_of\_times,\_it\_was\_the\_age\_\\
+            of\_wisdom,\_it\_was\_the\_age\_of\_foolishness,\_it\_was\_the\_epoch\_of\_belief\\
+            ,\_it\_was\_the\_epoch\_of\_incredulity,\_it\_was\_the\_season\_of\_Light,\_it\_wa\\
+            s\_the\_season\_of\_Darkness,\_it\_was\_the\_spring\_of\_hope,\_it\_was\_the\_wint\\
+            er\_of\_despair,\_we\_had\_everything\_before\_us,\_we\_had\_nothing\_before\_us\\
+            ,\_we\_were\_all\_going\_direct\_to\_Heaven,\_we\_were\_all\_going\_direct\_the\_o\\
+            ther\_way\_-\_in\_short,\_the\_period\_was\_so\_far\_like\_the\_present\_period,\_\\
+            that\_some\_of\_its\_noisiest\_authorities\_insisted\_on\_its\_being\_received\\
+            ,\_for\_good\_or\_for\_evil,\_in\_the\_superlative\_degree\_of\_comparison\_only.\$
+        \end{verbatim}
+    \end{center}
+    \bigskip
+    \normalsize \red{Definition:}\\
+    Replace a “run” of a character X with a single X that is immediately followed by the length of the run
+    Ex: \texttt{GAAAAAAAAATTACA} $\to$ \texttt{GA8T2ACA}\\
+    (Text containing numbers is slightly more complex encoding)
+\end{frame}
+
+\begin{frame}{Run length encoding, cont}
+    \begin{center}
+        \tiny RLE(REF) [614]:
+        \begin{verbatim}
+        It\_was\_the\_best\_of\_times,\_it\_was\_the\_worst\_of\_times,\_it\_was\_the\_age\_\\
+        of\_wisdom,\_it\_was\_the\_age\_of\_fo2lishnes2,\_it\_was\_the\_epoch\_of\_belief\\
+        ,\_it\_was\_the\_epoch\_of\_incredulity,\_it\_was\_the\_season\_of\_Light,\_it\_wa\\
+        s\_the\_season\_of\_Darknes2,\_it\_was\_the\_spring\_of\_hope,\_it\_was\_the\_wint\\
+        er\_of\_despair,\_we\_had\_everything\_before\_us,\_we\_had\_nothing\_before\_us \\
+        ,\_we\_were\_al2\_going\_direct\_to\_Heaven,\_we\_were\_al2\_going\_direct\_the\_o \\
+        ther\_way\_-\_in\_short,\_the\_period\_was\_so\_far\_like\_the\_present\_period,\_ \\
+        that\_some\_of\_its\_noisiest\_authorities\_insisted\_on\_its\_being\_received \\
+        ,\_for\_go2d\_or\_for\_evil,\_in\_the\_superlative\_degre2\_of\_comparison\_only.\$
+        \end{verbatim}
+    \end{center}
+    \bigskip
+    On its own, run length encoding does very little for compression!
+\end{frame}
+
+\begin{frame}{Run length encoding, cont}
+    \tiny
+    BWT(REF) [614]:
+    \begin{verbatim}
+        .dlmssftysesdtrsns\_y\_\_\$\_yfofeeeetggsfefefggeedrofr,llreef-,fs,,,,,,, \\
+        ,,nfrsdnnhereghettedndeteegeenstee,ssssst,esssnssffteedttttttttttr,,\\
+        ,,eeefehh\_\_p\_\_fpDwwwwwwwwwwweehl\_ew\_\_\_\_\_eoo\_neeeoaaeoo\_\_\_\_sephhrrhvh \\
+        hwwegmghhhhhhhkrrwwhhssHrrrvtrribbdbcbvs\_\_thwwpppvmmirdnnib\_\_eoooooo \\
+        oooooo\_\_\_\_eennnnnnaai\_\_\_ecc\_\_tttttttttttttttttts\_tsgltsLlvtt\_\_\_hhoor \\
+        e\_wrraddwlors\_\_\_\_\_\_\_\_\_r\_\_lteirillre\_ouaanooiioeooooiiihkiiiiiio\_\_iei \\
+        tsppioi\_\_\_\_\_\_\_\_\_\_\_\_ggnodsc\_sss\_gfhf\_fffhwh\_nsmo\_\_uee\_sioooaeeeeoo\_ii \\
+        cgppeeaoaeooeesseuutetaaaaaaaaaaai\_\_ei\_in\_\_aaie\_eeerei\_hrsssnacciiIi \\
+        iiiiiisn\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_oyoui\_\_a\_iiids\_\_aiiaee\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_tlar
+    \end{verbatim}
+    \bigskip \normalsize
+    Burrows-Wheeler Transform puts runs of characters together, so we can compress more
+\end{frame}
+
+\begin{frame}{Run length encoding, cont}
+    \tiny
+    RLE(BWT(REF)) [464]:
+    \begin{verbatim}
+        .dlms2ftysesdtrsns\_y\_2\$\_yfofe4tg2sfefefg2e2drofr,l2re2f-,fs,9nfrsdn2\\
+        hereghet2edndete2ge2nste2,s5t,es3ns2f2te2dt10r,4e3feh2\_2p\_2fpDw11e2h \\
+        l\_ew\_5eo2\_ne3oa2eo2\_4seph2r2hvh2w2egmgh7kr2w2h2s2Hr3vtr2ib2dbcbvs\_2t \\
+        hw2p3vm2irdn2ib\_2eo12\_4e2n6a2i\_3ec2\_2t18s\_tsgltsLlvt2\_3h2o2re\_wr2ad2 \\
+        wlors\_9r\_2lteiril2re\_oua2no2i2oeo4i3hki6o\_2ieitsp2ioi\_12g2nodsc\_s3\_g \\
+        fhf\_f3hwh\_nsmo\_2ue2\_sio3ae4o2\_i2cgp2e2aoaeo2e2s2eu2teta11i\_2ei\_in\_2a \\
+        2ie\_e3rei\_hrs3nac2i2Ii7sn\_15oyoui\_2a\_i3ds\_2ai2ae2\_21tlar
+    \end{verbatim}
+    \bigskip \normalsize
+    Run-length encoding of BWT is much smaller than run-length encoding of the original sequence. Specifically, we saved 150 bytes with no loss of information!
+\end{frame}
+
+\begin{frame}{Burrows-Wheeler algorithm}
+\gr{l6_figs/s22_bwt1.png}
+\end{frame}
+
+\begin{frame}{Burrows-Wheeler algorithm, cont}
+\gr{l6_figs/s23_bwt2.png}
+\end{frame}
+
+\begin{frame}{Burrows-Wheeler algorithm, cont}
+\gr{l6_figs/s24_bwt3.png}
+\end{frame}
+
+\begin{frame}{Burrows-Wheeler algorithm, cont}
+\gr{l6_figs/s25_bwt4.png}
+\end{frame}
+
+\begin{frame}{Burrows-Wheeler algorithm, cont}
+\gr{l6_figs/s26_bwt5.png}
+\end{frame}
+
+\begin{frame}{Burrows-Wheeler algorithm, cont}
+\gr{l6_figs/s27_bwt6.png}
+\end{frame}
+
+\section{Using the BWT}
+
+\begin{frame}{Reversing the BWT}
+\gr{l6_figs/s28_rev1.png}
+\end{frame}
+
+\begin{frame}{Reversing the BWT, cont}
+\gr{l6_figs/s29_rev2.png}
+\end{frame}
+
+\begin{frame}{Reversing the BWT, cont}
+\gr{l6_figs/s30_rev3.png}
+\end{frame}
+
+\begin{frame}{Reversing the BWT, cont}
+\gr{l6_figs/s31_rev4.png}
+\end{frame}
+
+\begin{frame}{Reversing the BWT, cont}
+\gr{l6_figs/s32_rev5.png}
+\end{frame}
+
+\begin{frame}{Reversing the BWT, cont}
+\gr{l6_figs/s33_rev6.png}
+\end{frame}
+
+\begin{frame}{Reversing the BWT, cont}
+\gr{l6_figs/s34_rev7.png}
+\end{frame}
+
+\begin{frame}{Reversing the BWT, cont}
+\gr{l6_figs/s35_rev8.png}
+\end{frame}
+
+\begin{frame}{Reversing the BWT, cont}
+\gr{l6_figs/s36_rev9.png}
+\end{frame}
+
+\begin{frame}{BWA and SAM/BAM files}
+\gr{l6_figs/s37_samfile.png}
+\end{frame}
+
+\begin{frame}{Variant calling}
+\gr{l6_figs/s38_variant_calling.png}
+\end{frame}
+
+\begin{frame}{Variant calling, cont}
+    \begin{columns}
+        \begin{column}{0.6\textwidth}
+            SNP calling compares read nucleotides to a reference sequence\\
+            \bigskip
+            Bayes and SNIPPY are common tools\\
+            \bigskip
+            Requires sufficient depth to account for sequencing read errors
+        \end{column}
+        \begin{column}{0.4\textwidth}
+            \gr{l6_figs/s39_snippy.png}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\section{Lab 6}
+
+\begin{frame}{Lab 6}
+    \blu{Topic: Burrows-Wheeler Alignments and SNP Calling}\\
+    \bigskip
+    Work in groups of 2 (new partners!!)\\
+    \bigskip
+    The lab is to be handed in with the HW at the start of next week
+    \begin{outline}
+        \1 Labs are to be done in class here
+        \1 HWs must be done individually after class
+    \end{outline}
+\end{frame}
+
 
 \end{document}
