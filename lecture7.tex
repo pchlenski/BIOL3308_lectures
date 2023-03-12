@@ -1,0 +1,361 @@
+\documentclass{beamer}
+\usetheme{chlenski}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{outlines}
+\usepackage{hyperref}
+\usepackage{babel}
+\usepackage{verbatim}
+\usepackage[nodisplayskipstretch]{setspace}
+
+\title{Intro to Microbial Genomics}
+\subtitle{BIOL BC3308, Lecture 7}
+\author{Philippe Chlenski}
+\date{February 28, 2023}
+
+\renewcommand{\c}[1]{\begin{center}#1\end{center}}
+\newcommand{\blu}[1]{\textcolor{blue}{\textbf{#1}}}
+\newcommand{\red}[1]{\textcolor{red}{\textbf{#1}}}
+\newcommand{\yel}[1]{\textcolor{yellow}{\textbf{#1}}}
+\newcommand{\grn}[1]{\textcolor{dark-green}{\textbf{#1}}}
+\newcommand{\prp}[1]{\textcolor{purple}{\textbf{#1}}}
+\newcommand{\gr}[2][.95]{\c{\includegraphics[width=#1\textwidth]{#2}}}
+
+% \setbeameroption{show notes}
+
+\begin{document}
+
+\begin{frame}[plain]
+\titlepage
+\end{frame}
+
+\begin{frame}{Outline}
+\tableofcontents
+\end{frame}
+
+\section{Background and motivation}
+
+\begin{frame}{Overview}
+    \begin{outline}
+        \1[] Questions:
+            \2 What do I do with a list of genes or mutations?
+        \1[] Theory:
+            \2 Gene ontology enrichment
+            \2 Pathway enrichment
+        \1[] Practice:
+            \2 Investigating common tools and packages
+    \end{outline}
+\end{frame}
+
+\begin{frame}{Gene annotation}
+    \begin{columns}
+        \begin{column}{0.7\textwidth}
+            \red{Definition:} Assigning a name and/or function to a given gene.\\
+            \bigskip
+            Mapping using an annotated reference $\to$ known gene names $\to$ use reference annotations for homologous sequences\\
+            \bigskip
+            \textit{De novo} assembly $\to$ unknown gene functions $\to$ new annotation by comparing unknown to known sequences (how?)\\
+            \bigskip
+            Where would we store annotations? How are they useful?\\
+            \bigskip
+            Many ways to do this!
+        \end{column}
+        \begin{column}{0.3\textwidth}
+            \gr{l7_figs/s3_file.png}
+            \gr{l7_figs/s3_gene.png}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Genes/pathway analysis: overview}
+    \gr{l7_figs/s4_enrichment.png}
+    Genes of interest come from experiments! Differentially expressed, those with mutations, etc\ldots\\
+    \bigskip
+    Pathway genes come from annotations and databases
+\end{frame}
+
+\begin{frame}{Genes/pathway analysis: how to begin}
+\begin{columns}
+    \begin{column}{0.7\textwidth}
+        \begin{outline}
+            \1 You have a list of genes and/or proteins of interest, and you have a list of all possible genes from a given context
+            \1 You have quantitative data for each gene/protein:
+                \2 Fold change (e.g., expression)
+                \2 P-value
+                \2 Presence/absence
+        \end{outline}
+    \end{column}
+    \begin{column}{0.3\textwidth}
+         \gr{l7_figs/s5_unique_low_genes.png}
+    \end{column}
+\end{columns}
+\end{frame}
+
+\section{Translating IDs with UniProt}
+
+\begin{frame}{Translating identifiers}
+    \red{This the worst part\ldots}
+
+    \begin{outline}
+        \1[] Many different identifiers exist for genes and proteins, e.g. UniProt, Entrez, etc. 
+        \1[] Sometimes you have to translate one set of IDs into another
+            \2 A program might only accept certain types of IDs 
+            \2 You might have a list of genes with one type of ID and info for genes with another type of ID
+        \1[] Various web sites translate IDs $\to$ best for small lists
+            \2 UniProt: \href{https://www.uniprot.org}{uniprot.org}
+    \end{outline}
+\end{frame}
+
+\begin{frame}{UniProt landing page}
+    Click on ``ID Mapping''
+    \gr[0.8]{l7_figs/uniprot1.png}
+\end{frame}
+
+\begin{frame}{Inputting gene names}
+    Paste a newline-separated list of genes. In the ``From Database'' dropdown menu, select ``Gene Name'' (or other identifier, as needed)
+    \gr[0.5]{l7_figs/uniprot2.png}
+\end{frame}
+
+\begin{frame}{Inputting gene names, cont}
+    Restrict by organism (or coarser taxonomy) to keep the results manageable in number and relevant to your research question:
+    \gr[0.7]{l7_figs/uniprot3.png}
+\end{frame}
+
+\begin{frame}{UniProt search results}
+    Submitting your request will start a Mapping job. Once it's done, it will look like this:
+    \gr[0.8]{l7_figs/uniprot4.png}
+\end{frame}
+
+\begin{frame}{Translating from UniProt search results}
+    This is what the search results look like. Notice that IDs are not mapped one-to-one to UniProt KB entries:
+    \gr[0.6]{l7_figs/uniprot5.png}
+\end{frame}
+
+\begin{frame}{UniProt KB entry}
+    If you click on one of the entries, you can navigat to ``External Links.'' Most likely this will take you to any other database you need.
+    \gr[0.6]{l7_figs/uniprot6.png}
+\end{frame}
+
+\begin{frame}{UniProt translation summary}
+    First, navigate to the UniProt ID mapping service.\\
+    \bigskip
+    Then, input your identifiers and species names.\\
+    \bigskip
+    From the search results page, select an entry and navigate to the other database links.
+\end{frame}
+
+\section{Common databases}
+
+\begin{frame}{Common functional databases}
+    \blu{Two parts: annotation and function}\\
+    \bigskip
+    \begin{outline}
+        \1 Gene Ontology
+        \1 KEGG (primarily metabolic)
+    \end{outline}
+\end{frame}
+
+\begin{frame}{Ontology definitions}
+    \yel{Ontology (actually):} the philosophical study of being, as well as related concepts such as existence, becoming, and reality.\\
+    \bigskip
+    \blu{Ontology (information science):} a set of concepts and categories in a subject area or domain that shows their properties and the relations between them.\\
+    \bigskip
+    \red{Ontology (for our purposes):} A structured and controlled vocabulary that allows us to annotate gene products consistently, interpret the relationships among annotations, and can easily be handled by a computer.
+\end{frame}
+
+\begin{frame}{Gene ontology (GO) databases}
+    GO database consists of 3 ontologies that describe gene products in terms of their associated:
+    \begin{outline}
+        \1 Biological processes
+        \1 Cellular components
+        \1 Molecular functions
+    \end{outline}
+    \bigskip \centering{
+        Location: \href{http://www.geneontology.org}{www.geneontology.org}
+    }
+\end{frame}
+
+\begin{frame}{GO essential elements}
+    \begin{columns}
+        \begin{column}{0.6\textwidth}
+            \footnotesize
+            \begin{enumerate}
+                \item \blu{Unique identifier and term name:} Human-readable term (e.g. mitochondrion, glucose transmembrane transport) plus GO ID, (e.g. GO:0005739, GO:1904659) 
+                \item \blu{Aspect:} Cellular component, biological process or molecular function
+            \end{enumerate}
+        \end{column}
+        \begin{column}{0.4\textwidth}
+            \gr{l7_figs/s13_go.png}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{GO essential elements, cont}
+    \begin{columns}
+        \begin{column}{0.6\textwidth}
+            \footnotesize
+            \begin{enumerate}
+                \item[3.] \blu{Definition:} A textual description of what the term represents, plus reference(s) to the source of the information.
+                \item[4.] \blu{Relationships to other terms:} All non-root terms  have an \red{is a} sub-class relationship to another term; for example, glucose transmembrane transport (GO:1904659) \red{is a} monosaccharide transport (GO:0015749)
+            \end{enumerate}
+        \end{column}
+        \begin{column}{0.4\textwidth}
+            \gr{l7_figs/s13_go.png}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{GO summary}
+    \begin{columns}
+        \begin{column}{0.6\textwidth}
+            \begin{outline}
+                \1 Terms are nodes 
+                \1 Relationships are edges 
+                \1 Parent terms are more general
+                \1 Terms can have multiple parents
+            \end{outline}
+        \end{column}
+        \begin{column}{0.4\textwidth}
+            \gr{l7_figs/s13_go.png}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{EcoCyc: GO enrichment online}
+    \gr{l7_figs/s15_ecocyc1.png}
+     \centering{
+        Location: \href{https://www.ecocyc.org/}{https://www.ecocyc.org/}
+    }
+\end{frame}
+
+\begin{frame}{EcoCyc: GO enrichment outline, cont}
+    Tools $\to$ My SmartTables
+    \gr[0.7]{l7_figs/s16_smart_tables.png}
+\end{frame}
+
+\begin{frame}{EcoCyc: GO enrichment online, cont}
+    Tools $\to$ My SmartTables\\
+    \bigskip Store lists of genes or create new table from a .txt file of newline-separated genes
+    \gr{l7_figs/s17_ecocyc2.png}
+\end{frame}
+
+\begin{frame}{EcoCyc: GO enrichment online, cont}
+    Perform enrichment of pathways and/or each GO database
+    \begin{columns}
+        \begin{column}{0.7\textwidth}
+            \gr{l7_figs/s18_ecocyc3.png}
+        \end{column}
+        \begin{column}{0.3\textwidth}
+            \gr{l7_figs/s18_ecocyc4.png}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{KEGG Orthology (KO) Database}
+    \begin{columns}
+        \begin{column}{0.6\textwidth}
+            KEGG (Kyoto Encyclopedia of Genes and Genomes) is a database resource for understanding high-level functions and utilities of the biological system from molecular-level information like sequence data.
+        \end{column}
+        \begin{column}{0.4\textwidth}
+            \gr{l7_figs/s19_kegg1.png}
+        \end{column}
+    \end{columns}\\
+    \bigskip
+    \centering{
+        Location: \href{https://www.genome.jp/kegg/}{www.genome.jp/kegg}
+    }
+\end{frame}
+
+\begin{frame}{KEGG Orthology (KO) Database, cont}
+    \gr{l7_figs/s20_kegg2.png}
+\end{frame}
+
+\begin{frame}{KEGG Orthology (KO), Database, cont}
+    \gr{l7_figs/s21_kegg3.png}
+\end{frame}
+
+\begin{frame}{KEGG Orthology (KO), Database, cont}
+    \gr{l7_figs/s22_kegg4.png}
+\end{frame}
+
+\begin{frame}{KEGG Orthology (KO), Database, cont}
+    \gr{l7_figs/s23_kegg5.png}
+\end{frame}
+
+\begin{frame}{KEGG Orthology (KO), Database, cont}
+    \gr{l7_figs/s24_kegg6.png}
+\end{frame}
+
+\section{Takeaways}
+
+\begin{frame}{Limitations to enrichment analysis}
+    \blu{Geneset annotation bias:} can only discover waht is already known!\\
+    \bigskip
+    \blu{Non-model organisms:} no \textit{high-quality} annotations available\\
+    \bigskip
+    \blu{Size bias:} statistics are influenced by the size of the gene sets and datasets
+\end{frame}
+
+\begin{frame}{Annotation and related tools}
+    \label{tools}
+    \footnotesize
+    All links are to the relevant paper:
+    \begin{outline}
+        \1 \href{https://academic.oup.com/bioinformatics/article/30/14/2068/2390517?login=true}{\red{Prokka:}} annotates coding sequences
+        \1 \href{https://academic.oup.com/bioinformatics/article/31/22/3691/240757?login=true}{\red{Roary:}} generates a core genome alignment and pan genome (+ many other useful functions!)
+        \1 \href{https://pubmed.ncbi.nlm.nih.gov/30052170/}{\red{Mob-suite:}} determines plasmid transferability
+        \1 \href{https://www.mdpi.com/2076-2607/10/2/292}{\red{starAMR:}} compilation of resfinder, plasmidfinder, MLSTfinder
+        \1 \href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC442156/}{\blu{Mauve:}} rearranging contigs to compare de novo alignments
+        \1 \href{https://bmcecolevol.biomedcentral.com/articles/10.1186/1471-2148-7-214}{\blu{Beast:}} phylogenetics with temporal inferences
+        \1 \href{https://academic.oup.com/bioinformatics/article/32/22/3380/2525610}{\blu{plasmidSPAdes:}} assembles plasmids from genome sequences
+        \1 \href{https://academic.oup.com/nar/article/43/3/e15/2410982}{\blu{Gubbins:}} identifies large regions of recombination
+        \1 \href{https://academic.oup.com/jac/article/75/12/3491/5890997}{\blu{ResFinder:}} antibiotic resistance gene database
+        \1 \href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4239701/}{\blu{breseq:}} SNP identification with easy-to-interpret output format
+        \1 \href{https://github.com/tseemann/abricate}{\blu{ABRicate:}} compilation of antibiotic resistance, virulence, and plasmid-specific identification
+        \1 \href{https://www.nature.com/articles/s41598-018-28948-z}{\blu{GOATOOLS:}} a Python library for gene ontology analysis
+    \end{outline}
+\end{frame}
+
+\begin{frame}{A real pipeline}
+    \gr[0.5]{l7_figs/s27_pipe1.png}
+\end{frame}
+
+\begin{frame}{A real pipeline, cont}
+    \gr[0.5]{l7_figs/s28_pipe2.png}
+\end{frame}
+
+\begin{frame}{A real pipeline, cont}
+    \begin{columns}
+        \begin{column}{0.4\textwidth}
+            Best practice to keep tools in separate environments or kernels
+        \end{column}
+        \begin{column}{0.6\textwidth}
+            \gr[0.9]{l7_figs/s29_pipe3.png}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Creating your own conda environments in Jupyter}
+    Creating your own conda environments in Jupyter using the \texttt{new\_environment\_template\ script}:
+    \gr{l7_figs/s30_jupyter.png}
+\end{frame}
+
+\section{Tool lookup activity}
+
+\begin{frame}{Your turn!}
+    \begin{outline}
+        \1 Work in groups of two
+        \1 Choose 1 \red{red} tool from Slide \ref{tools} and look up its paper, documentation, and any other literature that may help you understand the context it was used in (search Bioconda and/or Github)
+        \1 In 45 minutes, give a 5 minute summary of the tool:
+            \2 What is it used for?
+            \2 How is it used? (give a sample command line statement)
+            \2 What information does the Github page have?
+            \2 What are the input files and formats?
+            \2 What are the output files and formats?
+            \2 What options does it allow and give an example of one?
+            \2 What can it be used for? Provide at least 1 example from literature of when/why may be used
+            \2 Try creating an environment for it and running the help flag to show that it works
+    \end{outline}
+\end{frame}
+
+\end{document}
