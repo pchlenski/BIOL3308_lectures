@@ -1,0 +1,308 @@
+\documentclass{beamer}
+\usetheme{chlenski}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{outlines}
+\usepackage{hyperref}
+\usepackage{babel}
+\usepackage{verbatim}
+\usepackage[nodisplayskipstretch]{setspace}
+
+\title{Intro to Microbial Genomics}
+\subtitle{BIOL BC3308, Lecture 8}
+\author{Philippe Chlenski}
+\date{March 21, 2023}
+
+\renewcommand{\c}[1]{\begin{center}#1\end{center}}
+\newcommand{\blu}[1]{\textcolor{blue}{\textbf{#1}}}
+\newcommand{\red}[1]{\textcolor{red}{\textbf{#1}}}
+\newcommand{\yel}[1]{\textcolor{yellow}{\textbf{#1}}}
+\newcommand{\grn}[1]{\textcolor{dark-green}{\textbf{#1}}}
+\newcommand{\prp}[1]{\textcolor{purple}{\textbf{#1}}}
+\newcommand{\gr}[2][.95]{\c{\includegraphics[width=#1\textwidth]{#2}}}
+
+% \setbeameroption{show notes}
+
+\begin{document}
+
+\begin{frame}[plain]
+\titlepage
+\end{frame}
+
+\begin{frame}{Outline}
+\tableofcontents
+\end{frame}
+
+\section{Logistics}
+
+\begin{frame}{Remaining dates for the semester}
+    \begin{table}[]
+        \centering
+        \begin{tabular}{l|l|l}
+            \textbf{Date}        &  \textbf{Time}     & \textbf{Assignment}\\
+            \hline
+            March 28    &  11:59 PM & Project proposals due (for custom \\
+                        &           & projects)\\
+            April 4     &  1:00 PM  & Presentation 1: question and proposed\\
+                        &           & pipeline with literature reference\\
+            April 7     &  11:59 PM & Pipeline assignment due on Canvas\\
+            April 25    &  1:00 PM  & Presentation 2: results\\
+            May 5       &  11:59 PM & Write-up and code due on Canvas
+        \end{tabular}
+        \label{tab:dates}
+    \end{table}
+\end{frame}
+
+\section{Pipeline assignment}
+
+\begin{frame}{Pipeline assignment overview}
+    \blu{Deadline:} April 7 at 11:59 PM\\
+    \bigskip
+    \blu{Worth:} 40 points\\
+    \bigskip
+    \blu{Goals:} practice reading and interpreting papers in microbial genomics; connect bioinformatics pipelines in literature with class materials
+\end{frame}
+
+\begin{frame}{Shared questions}
+    For both of the papers, you will be asked to identify:
+    \begin{outline}
+        \1 The overall research question
+        \1 The dataset
+            \2 Where it came from
+            \2 Where it can be found now (if different than where it came from)?
+            \2 Database and accession IDs (if applicable).
+        \1 Main conclusions of the study
+            \2 Whether you agree
+            \2 Your reasons for (dis)agreeing
+    \end{outline}
+\end{frame}
+
+\begin{frame}{Paper 1}
+    David \textit{et al}, 2019: Epidemic of carbapenem-resistant \textit{Klebsiella pneumoniae} in Europe is driven by nosocomial spread
+    % TODO: brief description
+    \begin{outline}
+        \1 E. coli ST131 is a global pandemic pathogen causing urinary tract and bloodstream infections.
+        \1 CTX-M-27-encoding plasmids are strictly found in clade C1, and CTX-M-15-encoding plasmids are exclusively present in clade C2, indicating strong plasmid-clade adaptations.
+        \1 The CTX-M-encoding ST131 Group1 and Group2 plasmids are clade-restricted and less transmissible, which may contribute to ST131 clonal superiority.
+    \end{outline}
+\end{frame}
+
+\begin{frame}{Paper 1 questions}
+    \begin{outline}
+        \1 Describe pipeline to generate Figures 2a and 2b
+            \2 Beginning with the sequencing platform.
+            \2 For each step:
+                \3 Specific tools or program used
+                \3 Purpose of tool/program
+                \3 Filtering criteria (if applicable)
+            \2 How is Fig 2b different from 2a?
+        \1 How do you interpret Fig 5a? What additional data is used here compared to Figure 2?
+        \1 What do the authors mean by a `major clonal lineage'?
+    \end{outline}
+\end{frame}
+
+\begin{frame}{Example: Paper 1, figure 2}
+    \begin{columns}
+        \begin{column}{0.4\textwidth}
+            \fbox{\gr{final_assignment_figs/david19_fig2.png}}
+        \end{column}
+        \begin{column}{0.6\textwidth}
+            \blu{Caption:} Carbapenemase-positive isolates are concentrated in major clonal lineages of \textit{K. pneumoniae}.\\
+            \bigskip
+            \blu{Relevant questions:}
+            \begin{outline}
+                \1 How were these figures generated?
+                \1 What is the difference between figures 2b and 2a?
+                \1 How does this figure support the authors' conclusions?
+            \end{outline}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Paper 2}
+    Kondratyeva \textit{et al}, 2020: Meta-analysis of pandemic \textit{Escherichia coli} ST131 plasmidome proves restricted plasmid-clade associations
+    % TODO: brief description
+    \begin{outline}
+        \1 The emergence and spread of carbapenem-resistant Klebsiella pneumoniae is a major concern for public health interventions.
+        \1 Carbapenemase acquisition is the main cause of carbapenem resistance and occurred across diverse phylogenetic backgrounds.
+        \1 Carbapenemase-positive isolates are concentrated in four clonal lineages, with high transmissibility, and within-hospital transmission is more frequent than interhospital spread. 
+    \end{outline}
+\end{frame}
+
+\begin{frame}{Paper 2 questions}
+    \begin{outline}
+        \1 Describe pipeline to generate Figure 1
+            \2 Beginning with the sequencing platform.
+            \2 For each step:
+                \3 Specific tools or program used
+                \3 Purpose of tool/program
+                \3 Filtering criteria (if applicable)
+        \1 What is the purpose of the shaded purple regions in Figure 4a (and b)?
+            \2 How does presenting the data in this way contribute to the main results in this figure?
+        \1 What data is used in Figure 5, and what is the main takeaway from this tree?
+    \end{outline}
+\end{frame}
+
+\section{Final project}
+
+\begin{frame}{Final project overview}
+    \blu{Deadline:} May 5 at 11:59 PM\\
+    \bigskip
+    \blu{Worth:} 300 points\\
+    \bigskip
+    \blu{Goals:} conduct an independent research project to demonstrate your command of important microbial genomics concepts and bioinformatics analyses; practice every aspect of conducting research from literature review to final manuscript production.
+\end{frame}
+
+\begin{frame}{Project topics}
+    \begin{outline}
+        \1 Default topic has two parts:
+            \2 Relationship between gene and plasmid cost
+            \2 Gene-set difference analysis using Prokka and Roary
+        \1 Custom projects are allowed and encouraged!
+            \2 Requires proposal submission by March 28 (next Tuesday)
+    \end{outline}
+\end{frame}
+
+% \begin{frame}{Ownership}
+%     You will be conducting novel research. If your research is used in publications, you will receive credit as coauthor.
+% \end{frame}
+
+\begin{frame}{Custom projects}
+    Custom projects are allowed and encouraged.\\
+    \bigskip
+    To ensure fairness, we will need to develop a rubric together, trying to stick as close as to the default rubric as possible.\\
+    \bigskip
+    Because of this, I will need an informal \blu{project proposal} by next Tuesday:
+    \begin{outline}
+        \1 Your research question and hypothesis
+        \1 A list of at least 3 relevant papers + 1 sentence each about their relevance
+        \1 A sketch of your methods (this is non-binding). How much does this differ from the default projects?
+        \1 A contingency plan: what will you do if you can't get your data, if your pipeline fails, etc?
+    \end{outline}
+\end{frame}
+
+\begin{frame}{Project background}
+    Within  bacterial communities, plasmids spread between cells through horizontal gene transfer (HGT)\\
+    \bigskip 
+    Some plasmids can endow certain strains with pathogenic traits.\\
+    \bigskip
+    Widely disseminated plasmids are known as ``epidemic plasmids.''\\
+    \bigskip
+    Only some strains that come into contact with epidemic plasmids can propagate them, ultimately causing infectious diseases.
+\end{frame}
+
+\begin{frame}{Background papers}
+    Three background papers for the baseline projects describe the relationship between plasmids and disease in more detail:
+    \begin{outline}
+        \1 \blu{Andersson \textit{et al} 2020: } Antibiotic resistance: turning evolutionary principles into clinical reality
+        \1 \blu{Dunn \textit{et al} 2019: } The evolution and transmission of multi-drug resistant \textit{Escherichia coli} and \textit{Klebsiella pneumoniae}: the complexity of clones and plasmids
+        \1 \blu{Mathers \textit{et al} 2015: } The role of epidemic resistance plasmids and international high-risk clones in the spread of multidrug-resistant \textit{Enterobacteriaceae}
+    \end{outline}
+\end{frame}
+
+\begin{frame}{Project connection}
+    \begin{outline}
+        \1 Lopatkin lab studies HGT of plasmids: why are some plasmids and strains more successful than others?
+        \1 One specific question: what genetic features of a plasmid make it difficult to acquire through HGT?
+            \2 Lopatkin lab has obtained and sequenced 39 representative clinical plasmids.
+            \2 In parallel, they we have measured the difficulty of acquiring each of these plasmids (plasmid cost). 
+            \2 Plasmids exhibit a range of costs, from not costly ($\leq$ 1) to highly detrimental (>1).
+            \2 Checking each plasmid sequence to identify genetic determinants that are predictive of these measured costs. 
+        \1 Objective: use bioinformatic analysis to generate hypotheses that can be tested experimentally in the lab
+    \end{outline}
+\end{frame}
+
+\begin{frame}{Plasmid cost}
+    \footnotesize
+    \fbox{\gr{final_assignment_figs/final_assignment_fig1.png}}
+    Plasmid costs = growth defect in an organism with plasmid vs. without.\\
+    Cost of 1 = no cost associated with acquiring the plasmid.\\
+    Cost $>$ 1 = increasingly difficult to acquire the plasmid.\\
+    Stars indicate statistically significant cost (pCU1 is the first plasmid to show a statistically significant cost).
+\end{frame}
+
+\begin{frame}{Data provided on Canvas}
+These files are located in \texttt{Files/Final\_project}:
+\begin{enumerate}
+    \item \texttt{proteins.fasta}: Representative protein seqs for \textbf{all} genes of interest.
+    \item \texttt{Summary\_table\_by\_plasmids.xlsx}: Metadata for all plasmids:
+    \begin{itemize}
+        \item \textbf{Plasmid:} Name of each plasmid
+        \item \textbf{INC:} Incompatibility group of the plasmid
+        \item \textbf{cost\_av:} Average plasmid cost
+        \item \textbf{cost\_std:} Standard deviation of plasmid cost
+        \item \textbf{cost\_bin:} Statistical significance indicator bit
+        \item \textbf{p\_value\_corrected:} P-value corresponding to \textbf{cost\_bin}
+    \end{itemize}
+    \item \texttt{Fastas/}: FASTA files for each plasmid
+    \item \texttt{Papers/}: All reference papers.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Gene assignments}
+    \begin{table}[h!]
+        \centering
+        \begin{tabular}{l|l}
+            \textbf{Gen} &	\textbf{Assignment}\\
+            \hline
+            \textit{traD}	& Kayla\\
+            \textit{psiB}	& Michelle\\
+            \textit{trbB}	& Kaitlyn\\
+            \textit{traG}	& Kaylene\\
+            \textit{ssb}	& Cindy\\
+            \textit{traW}	& Sylvie\\
+            \textit{traT}	& Sophia\\
+        \end{tabular}
+        \label{tab:assignments}
+    \end{table}
+\end{frame}
+
+\begin{frame}{Default research questions}
+    Conduct a bioinformatic analysis to answer two research questions: 
+    \begin{outline}
+        \1 Is your gene potentially important in determining the cost of a plasmid? Note that not every gene is on every plasmid. You will focus on three aspects of your gene:
+            \2 Nucleotide or protein sequence 
+            \2 Intergenic nucleotide region upstream of your gene
+            \2 Genetic context surrounding the gene
+        \1 Do plasmids with similar cost phenotypes share groups of genes and/or features.
+            \2 In this analysis, you will define the specific research question.
+            \2 A default framework is provided but can be expanded/modified.
+        \end{outline}
+    For more details, please consult the assignment document.
+\end{frame}
+
+\begin{frame}{Submission components: presentations}
+    \begin{outline}
+        \1[] \blu{Presentation 1:} 10--12 minutes, half Q1, half Q2
+            \2 Specific research question and hypothesis
+            \2 Proposed bioinformatics approach
+            \2 Justify question, hypothesis, and approach with literature and data
+        \1[] \blu{Presentation 2:} 13--15 minutes, Q1:Q2 balance up to you
+            \2 Restate research question, hypothesis
+            \2 State main results, including visualizations
+            \2 Focus on interpreting results in the context of the data/literature
+    \end{outline}  
+\end{frame}
+
+\begin{frame}{Submission components: deliverables}
+    \begin{outline}
+        \1[] \blu{Write-ups:} one document per research question
+            \2 Introduction (background and hypothesis)
+            \2 Materials and methods
+            \2 Results and discussion
+        \1[] \blu{Code and intermediate files:}
+            \2 All associated scripts and functions
+            \2 Should be reproducible
+            \2 Should be well-commented and understandable
+    \end{outline}
+\end{frame}
+
+\section{Independent work: final project}
+
+\begin{frame}{Independent work: final project}
+    In lieu of a lab, please review the final project guidelines and begin exploring the provided materials.\\
+    \bigskip
+    Doing this in class allows me to answer your questions faster, and also ensures I haven't forgotten anything.
+\end{frame}
+
+\end{document}
