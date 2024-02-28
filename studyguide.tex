@@ -1,0 +1,73 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{outlines}
+\usepackage{helvet}
+\usepackage{microtype}
+\usepackage{hyperref}
+\usepackage{tabularx}
+\usepackage{fullpage}
+
+% \renewcommand{\familydefault}{\sfdefault}
+\title{BIOL BC3308: Intro to Microbial Genomics\\
+Exam study guide}
+\date{}
+
+\begin{document}
+
+\maketitle{} \noindent
+% \textbf{Instructor: } Philippe Chlenski (\texttt{pac@cs.columbia.edu})\\
+% \textbf{Office hours: } TBA, CSB 506\\
+% \textbf{Location/time: } Wednesdays 1:10--4:00 PM, QLab Sulzberger Hall
+% 
+\section{Common file formats (fasta, fastq, genbank, BAM, SAM, vcf) (weeks 1 and 6)}
+\begin{itemize}
+    \item What file types store nucleotide data?
+    \item What file types store amino acid data?
+    \item What are the requirements for different file formats? 
+    \item How are fastq different from fasta files?
+    \item What are BAM files and why are they useful?
+\end{itemize}
+
+\section{Databases (week 2)}
+\begin{itemize}
+    \item What are some common databases?
+    \item What are the types of databases that exist? 
+    \item What types of information are stored in different databases?
+    \item How are some ways we access database information?
+    \item How does BLAST utilize databases? Why is it useful?
+\end{itemize}
+
+\section{Comparative sequence alignment (week 3)}
+\begin{itemize}
+    \item What is global sequencing alignment? How is it implemented?
+    \item What is local sequencing alignment? How is it implemented?
+    \item How are local and global alignment approaches different? How is it performed? When might local alignment be preferred over global alignment (and vice versa)?
+    \item What is the role of a scoring scheme in sequencing alignment?
+\end{itemize}
+
+\section{Genome sequencing and assembly methods (weeks 4 and 6)}
+\begin{itemize}
+    \item What are the common types of sequencing technologies?
+    \item What are the (dis)advantages of different sequencing technologies?
+    \item What is the expected output from an Illumina sequencer?
+    \item What features of a genome make sequence assembly challenging?
+    \item What is paired end sequencing and why is it useful?
+    \item What are the steps in an assembly pipeline?
+    \item How do we calculate average coverage, and why is it an important metric?
+    \item What is the purpose of a De Brujin’s graph? How is it useful? How is it done?
+    \item Why is BWT important for mapping reads? How is it done?
+    \item What is the difference between de novo assembly and resequencing?
+\end{itemize}
+
+\section{Phylogenetics (week 5)}
+\begin{itemize}
+    \item What are the types of tree-building methods?
+    \item How do you interpret phylogenetic trees?
+    \item What does a parsimonious tree represent?
+    \item How many nodes does a rooted tree with n leaves have (and similar)?
+    \item What types of sequences can you use to build a tree?
+\end{itemize}
+
+\section{General programs and tools: what programs or functions did we use? What were they used for?}
+
+\end{document}
